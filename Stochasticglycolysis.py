@@ -12,8 +12,6 @@ def Noise(dt):
 
 def glycolysis_model(
     t,
-    dt,
-    Eps,
     J0=2.5,
     k1=100,
     k2=6,
@@ -39,13 +37,13 @@ def glycolysis_model(
         v7 = k * x[6]
         J = kappa * (x[3] - x[6])
         return [
-            J0 - v1 + (Eps*Noise(dt)),
-            2 * v1 - v2 - v6 + (Eps * Noise(dt)),
-            v2 - v3 + (Eps*Noise(dt)),
-            v3 - v4 - J + (Eps*Noise(dt)),
-            v2 - v4 - v6 + (Eps*Noise(dt)),
-            -2 * v1 + 2 * v3 - v5 + (Eps*Noise(dt)),
-            psi * J - v7 + (Eps*Noise(dt)),
+            J0 - v1,
+            2 * v1 - v2 - v6,
+            v2 - v3,
+            v3 - v4 - J,
+            v2 - v4 - v6,
+            -2 * v1 + 2 * v3 - v5,
+            psi * J - v7,
         ]
 
     x0 = [
@@ -208,42 +206,42 @@ def main():
     Eps = 0.05
 
     # Data
-    y = glycolysis_model(np.ravel(t), dt, Eps)
+    y = glycolysis_model(np.ravel(t))
     np.savetxt("glycolysis.dat", np.hstack((t, y)))
-
-    fig, axs = plt.subplots(4, 2,figsize=(12,17))
-
-    axs[0, 0].plot(t, y[:,0], label="Exact", color="blue")
-    axs[0, 0].set(xlabel='t', ylabel=r'$S_1$')
-
-    axs[0, 1].plot(t, y[:,1], label="Exact", color="blue")
-    axs[0, 1].set(xlabel='t', ylabel=r'$S_2$')
-    
-    axs[1, 0].plot(t, y[:,2], label="Exact", color="blue")
-    axs[1, 0].set(xlabel='t', ylabel=r'$S_3$')
-
-    axs[1, 1].plot(t, y[:,3], label="Exact", color="blue")
-    axs[1, 1].set(xlabel='t', ylabel=r'$S_4$')
-
-    axs[2, 0].plot(t, y[:,4], label="Exact", color="blue")
-    axs[2, 0].set(xlabel='t', ylabel=r'$S_5$')
-
-    axs[2, 1].plot(t, y[:,5], label="Exact", color="blue")
-    axs[2, 1].set(xlabel='t', ylabel=r'$S_6$')
-
-    axs[3, 0].plot(t, y[:,6], label="Exact", color="blue")
-    axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
-
-    plt.legend(prop={'size': 10})
-    plt.savefig("NoiselessData")
-    plt.close()
-
 
     # Add noise
     if noise > 0:
         std = noise * y.std(0)
         y[1:-1, :] += np.random.normal(0, std, (y.shape[0] - 2, y.shape[1]))
         np.savetxt("glycolysis_noise.dat", np.hstack((t, y)))
+
+        fig, axs = plt.subplots(4, 2,figsize=(12,17))
+
+        axs[0, 0].plot(t, y[:,0], label="Exact", color="blue")
+        axs[0, 0].set(xlabel='t', ylabel=r'$S_1$')
+
+        axs[0, 1].plot(t, y[:,1], label="Exact", color="blue")
+        axs[0, 1].set(xlabel='t', ylabel=r'$S_2$')
+        
+        axs[1, 0].plot(t, y[:,2], label="Exact", color="blue")
+        axs[1, 0].set(xlabel='t', ylabel=r'$S_3$')
+
+        axs[1, 1].plot(t, y[:,3], label="Exact", color="blue")
+        axs[1, 1].set(xlabel='t', ylabel=r'$S_4$')
+
+        axs[2, 0].plot(t, y[:,4], label="Exact", color="blue")
+        axs[2, 0].set(xlabel='t', ylabel=r'$S_5$')
+
+        axs[2, 1].plot(t, y[:,5], label="Exact", color="blue")
+        axs[2, 1].set(xlabel='t', ylabel=r'$S_6$')
+
+        axs[3, 0].plot(t, y[:,6], label="Exact", color="blue")
+        axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
+
+        plt.legend(prop={'size': 10})
+        plt.savefig("RawData")
+        plt.close()
+
 
         fig, axs = plt.subplots(4, 2,figsize=(12,17))
 
@@ -269,7 +267,7 @@ def main():
         axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
 
         plt.legend(prop={'size': 10})
-        plt.savefig("NoisyData")
+        plt.savefig("MeasurementData")
         plt.close()
 
     # Train
@@ -281,32 +279,32 @@ def main():
 
     fig, axs = plt.subplots(4, 2,figsize=(12,17))
 
-    axs[0, 0].plot(t, y[:,0], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[0, 0].scatter(t, y[:,0], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,0], label="Learned", color="red")
     axs[0, 0].set(xlabel='t', ylabel=r'$S_1$')
 
-    axs[0, 1].plot(t, y[:,1], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[0, 1].scatter(t, y[:,1], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,1], label="Learned", color="red")
     axs[0, 1].set(xlabel='t', ylabel=r'$S_2$')
     
-    axs[1, 0].plot(t, y[:,2], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[1, 0].scatter(t, y[:,2], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,2], label="Learned", color="red")
     axs[1, 0].set(xlabel='t', ylabel=r'$S_3$')
 
-    axs[1, 1].plot(t, y[:,3], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[1, 1].scatter(t, y[:,3], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,3], label="Learned", color="red")
     axs[1, 1].set(xlabel='t', ylabel=r'$S_4$')
 
-    axs[2, 0].plot(t, y[:,4], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[2, 0].scatter(t, y[:,4], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,4], label="Learned", color="red")
     axs[2, 0].set(xlabel='t', ylabel=r'$S_5$')
 
-    axs[2, 1].plot(t, y[:,5], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[2, 1].scatter(t, y[:,5], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,5], label="Learned", color="red")
     axs[2, 1].set(xlabel='t', ylabel=r'$S_6$')
 
-    axs[3, 0].plot(t, y[:,6], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[3, 0].scatter(t, y[:,6], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,6], label="Learned", color="red")
     axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
 
     plt.legend(prop={'size': 10})
