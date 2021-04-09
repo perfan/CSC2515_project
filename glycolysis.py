@@ -231,10 +231,7 @@ def main():
         std = noise * y.std(0)
         y[1:-1, :] += np.random.normal(0, std, (y.shape[0] - 2, y.shape[1]))
         np.savetxt("glycolysis_noise.dat", np.hstack((t, y)))
-
-        y = glycolysis_model(np.ravel(t))
-        np.savetxt("glycolysis.dat", np.hstack((t, y)))
-
+        
         fig, axs = plt.subplots(4, 2,figsize=(12,17))
 
         axs[0, 0].plot(t, y[:,0], label="Exact", color="blue")
