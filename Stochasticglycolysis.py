@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 def Noise(dt):
-      return np.random.normal(loc=0.0, scale=np.sqrt(dt))
+      return np.random.normal(loc=0.0, scale=np.sqrt(1))
 
 def glycolysis_model(
     t,
@@ -39,13 +39,13 @@ def glycolysis_model(
         v7 = k * x[6]
         J = kappa * (x[3] - x[6])
         return [
-            J0 - v1 + Eps * Noise(dt),
-            2 * v1 - v2 - v6 + Eps * Noise(dt),
-            v2 - v3 + Eps * Noise(dt),
-            v3 - v4 - J + Eps * Noise(dt),
-            v2 - v4 - v6 + Eps * Noise(dt),
-            -2 * v1 + 2 * v3 - v5 + Eps * Noise(dt),
-            psi * J - v7 + Eps * Noise(dt),
+            J0 - v1 + (Eps*Noise(dt)),
+            2 * v1 - v2 - v6 + (Eps * Noise(dt)),
+            v2 - v3 + (Eps*Noise(dt)),
+            v3 - v4 - J + (Eps*Noise(dt)),
+            v2 - v4 - v6 + (Eps*Noise(dt)),
+            -2 * v1 + 2 * v3 - v5 + (Eps*Noise(dt)),
+            psi * J - v7 + (Eps*Noise(dt)),
         ]
 
     x0 = [
@@ -88,13 +88,13 @@ def pinn(data_t, data_y, noise, dt, Eps):
         v7 = k * y[:, 6:7]
         J = kappa * (y[:, 3:4] - y[:, 6:7])
         return [
-            tf.gradients(y[:, 0:1], t)[0] - (J0 - v1) + Eps * Noise(dt),
-            tf.gradients(y[:, 1:2], t)[0] - (2 * v1 - v2 - v6) + Eps * Noise(dt),
-            tf.gradients(y[:, 2:3], t)[0] - (v2 - v3) + Eps * Noise(dt),
-            tf.gradients(y[:, 3:4], t)[0] - (v3 - v4 - J) + Eps * Noise(dt),
-            tf.gradients(y[:, 4:5], t)[0] - (v2 - v4 - v6) + Eps * Noise(dt),
-            tf.gradients(y[:, 5:6], t)[0] - (-2 * v1 + 2 * v3 - v5) + Eps * Noise(dt),
-            tf.gradients(y[:, 6:7], t)[0] - (psi * J - v7) + Eps * Noise(dt),
+            tf.gradients(y[:, 0:1], t)[0] - (J0 - v1) + (Eps*Noise(dt)),
+            tf.gradients(y[:, 1:2], t)[0] - (2 * v1 - v2 - v6) + (Eps*Noise(dt)),
+            tf.gradients(y[:, 2:3], t)[0] - (v2 - v3) + (Eps*Noise(dt)),
+            tf.gradients(y[:, 3:4], t)[0] - (v3 - v4 - J) + (Eps*Noise(dt)),
+            tf.gradients(y[:, 4:5], t)[0] - (v2 - v4 - v6) + (Eps*Noise(dt)),
+            tf.gradients(y[:, 5:6], t)[0] - (-2 * v1 + 2 * v3 - v5) + (Eps*Noise(dt)),
+            tf.gradients(y[:, 6:7], t)[0] - (psi * J - v7) + (Eps*Noise(dt)),
         ]
 
     geom = dde.geometry.TimeDomain(data_t[0, 0], data_t[-1, 0])
