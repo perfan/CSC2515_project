@@ -4,6 +4,8 @@ from scipy.integrate import odeint
 import deepxde as dde
 from deepxde.backend import tf
 
+import matplotlib.pyplot as plt
+
 
 def glycolysis_model(
     t,
@@ -195,6 +197,35 @@ def main():
     # Data
     y = glycolysis_model(np.ravel(t))
     np.savetxt("glycolysis.dat", np.hstack((t, y)))
+
+    fig, axs = plt.subplots(4, 2)
+
+    axs[0, 0].plot(t, y[:,0], label="Exact", color="blue")
+    axs[0, 0].set(xlabel='t', ylabel=r'$S_1$')
+
+    axs[0, 1].plot(t, y[:,1], label="Exact", color="blue")
+    axs[0, 1].set(xlabel='t', ylabel=r'$S_2$')
+    
+    axs[1, 0].plot(t, y[:,2], label="Exact", color="blue")
+    axs[1, 0].set(xlabel='t', ylabel=r'$S_3$')
+
+    axs[1, 1].plot(t, y[:,3], label="Exact", color="blue")
+    axs[1, 1].set(xlabel='t', ylabel=r'$S_4$')
+
+    axs[2, 0].plot(t, y[:,4], label="Exact", color="blue")
+    axs[2, 0].set(xlabel='t', ylabel=r'$S_5$')
+
+    axs[2, 1].plot(t, y[:,5], label="Exact", color="blue")
+    axs[2, 1].set(xlabel='t', ylabel=r'$S_6$')
+
+    axs[3, 0].plot(t, y[:,6], label="Exact", color="blue")
+    axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
+
+    plt.legend(prop={'size': 10})
+    plt.savefig("NoiselessData")
+    plt.close()
+
+
     # Add noise
     if noise > 0:
         std = noise * y.std(0)
