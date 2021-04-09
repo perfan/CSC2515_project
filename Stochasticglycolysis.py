@@ -284,27 +284,27 @@ def main():
     axs[0, 0].set(xlabel='t', ylabel=r'$S_1$')
 
     axs[0, 1].scatter(t, y[:,1], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,1], label="Learned", color="red")
+    axs[0, 1].plot(t, y_pred[:,1], label="Learned", color="red")
     axs[0, 1].set(xlabel='t', ylabel=r'$S_2$')
     
     axs[1, 0].scatter(t, y[:,2], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,2], label="Learned", color="red")
+    axs[1, 0].plot(t, y_pred[:,2], label="Learned", color="red")
     axs[1, 0].set(xlabel='t', ylabel=r'$S_3$')
 
     axs[1, 1].scatter(t, y[:,3], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,3], label="Learned", color="red")
+    axs[1, 1].plot(t, y_pred[:,3], label="Learned", color="red")
     axs[1, 1].set(xlabel='t', ylabel=r'$S_4$')
 
     axs[2, 0].scatter(t, y[:,4], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,4], label="Learned", color="red")
+    axs[2, 0].plot(t, y_pred[:,4], label="Learned", color="red")
     axs[2, 0].set(xlabel='t', ylabel=r'$S_5$')
 
     axs[2, 1].scatter(t, y[:,5], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,5], label="Learned", color="red")
+    axs[2, 1].plot(t, y_pred[:,5], label="Learned", color="red")
     axs[2, 1].set(xlabel='t', ylabel=r'$S_6$')
 
     axs[3, 0].scatter(t, y[:,6], label="Exact", color="blue")
-    axs[0, 0].plot(t, y_pred[:,6], label="Learned", color="red")
+    axs[3, 0].plot(t, y_pred[:,6], label="Learned", color="red")
     axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
 
     plt.legend(prop={'size': 10})
