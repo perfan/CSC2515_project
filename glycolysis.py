@@ -231,28 +231,28 @@ def main():
         std = noise * y.std(0)
         y[1:-1, :] += np.random.normal(0, std, (y.shape[0] - 2, y.shape[1]))
         np.savetxt("glycolysis_noise.dat", np.hstack((t, y)))
-        
+
         fig, axs = plt.subplots(4, 2,figsize=(12,17))
 
-        axs[0, 0].plot(t, y[:,0], label="Exact", color="blue")
+        axs[0, 0].scatter(t, y[:,0], label="Exact", color="blue")
         axs[0, 0].set(xlabel='t', ylabel=r'$S_1$')
 
-        axs[0, 1].plot(t, y[:,1], label="Exact", color="blue")
+        axs[0, 1].scatter(t, y[:,1], label="Exact", color="blue")
         axs[0, 1].set(xlabel='t', ylabel=r'$S_2$')
         
-        axs[1, 0].plot(t, y[:,2], label="Exact", color="blue")
+        axs[1, 0].scatter(t, y[:,2], label="Exact", color="blue")
         axs[1, 0].set(xlabel='t', ylabel=r'$S_3$')
 
-        axs[1, 1].plot(t, y[:,3], label="Exact", color="blue")
+        axs[1, 1].scatter(t, y[:,3], label="Exact", color="blue")
         axs[1, 1].set(xlabel='t', ylabel=r'$S_4$')
 
-        axs[2, 0].plot(t, y[:,4], label="Exact", color="blue")
+        axs[2, 0].scatter(t, y[:,4], label="Exact", color="blue")
         axs[2, 0].set(xlabel='t', ylabel=r'$S_5$')
 
-        axs[2, 1].plot(t, y[:,5], label="Exact", color="blue")
+        axs[2, 1].scatter(t, y[:,5], label="Exact", color="blue")
         axs[2, 1].set(xlabel='t', ylabel=r'$S_6$')
 
-        axs[3, 0].plot(t, y[:,6], label="Exact", color="blue")
+        axs[3, 0].scatter(t, y[:,6], label="Exact", color="blue")
         axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
 
         plt.legend(prop={'size': 10})
@@ -263,8 +263,42 @@ def main():
     var_list = pinn(t, y, noise)
 
     # Prediction
-    y = glycolysis_model(np.ravel(t), *var_list)
-    np.savetxt("glycolysis_pred.dat", np.hstack((t, y)))
+    y_pred = glycolysis_model(np.ravel(t), *var_list)
+    np.savetxt("glycolysis_pred.dat", np.hstack((t, y_pred)))
+
+    fig, axs = plt.subplots(4, 2,figsize=(12,17))
+
+    axs[0, 0].plot(t, y[:,0], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[0, 0].set(xlabel='t', ylabel=r'$S_1$')
+
+    axs[0, 1].plot(t, y[:,1], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[0, 1].set(xlabel='t', ylabel=r'$S_2$')
+    
+    axs[1, 0].plot(t, y[:,2], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[1, 0].set(xlabel='t', ylabel=r'$S_3$')
+
+    axs[1, 1].plot(t, y[:,3], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[1, 1].set(xlabel='t', ylabel=r'$S_4$')
+
+    axs[2, 0].plot(t, y[:,4], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[2, 0].set(xlabel='t', ylabel=r'$S_5$')
+
+    axs[2, 1].plot(t, y[:,5], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[2, 1].set(xlabel='t', ylabel=r'$S_6$')
+
+    axs[3, 0].plot(t, y[:,6], label="Exact", color="blue")
+    axs[0, 0].plot(t, y_pred[:,0], label="Exact", color="red")
+    axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
+
+    plt.legend(prop={'size': 10})
+    plt.savefig("LearnedCurve")
+    plt.close()
 
 
 if __name__ == "__main__":
