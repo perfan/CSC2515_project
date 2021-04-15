@@ -208,6 +208,22 @@ def main():
     # Data
     y = glycolysis_model(np.ravel(t))
     np.savetxt("glycolysis.dat", np.hstack((t, y)))
+    
+    y_p = glycolysis_model(np.ravel(t),
+    J0=2.46,
+    k1=73,
+    k2=4.2,
+    k3=11,
+    k4=88,
+    k5=1.19,
+    k6=13,
+    k=1.3,
+    kappa=14.1,
+    q=4.1,
+    K1=0.58,
+    psi=0.07,
+    N=1.5,
+    A=4.38)
 
     # Add noise
     if noise > 0:
@@ -215,60 +231,99 @@ def main():
         y[1:-1, :] += np.random.normal(0, std, (y.shape[0] - 2, y.shape[1]))
         np.savetxt("glycolysis_noise.dat", np.hstack((t, y)))
 
-        fig, axs = plt.subplots(4, 2,figsize=(12,17))
+        fig, axs = plt.subplots(2, 4,figsize=(25,12))
 
         axs[0, 0].plot(t, y[:,0], label="Exact", color="blue")
-        axs[0, 0].set(xlabel='t', ylabel=r'$S_1$')
+        axs[0, 0].set(xlabel='t(min)', ylabel=r'$S_1(mM)$')
 
         axs[0, 1].plot(t, y[:,1], label="Exact", color="blue")
-        axs[0, 1].set(xlabel='t', ylabel=r'$S_2$')
+        axs[0, 1].set(xlabel='t(min)', ylabel=r'$S_2(mM)$')
         
-        axs[1, 0].plot(t, y[:,2], label="Exact", color="blue")
-        axs[1, 0].set(xlabel='t', ylabel=r'$S_3$')
+        axs[0, 2].plot(t, y[:,2], label="Exact", color="blue")
+        axs[0, 2].set(xlabel='t(min)', ylabel=r'$S_3(mM)$')
 
-        axs[1, 1].plot(t, y[:,3], label="Exact", color="blue")
-        axs[1, 1].set(xlabel='t', ylabel=r'$S_4$')
+        axs[0, 3].plot(t, y[:,3], label="Exact", color="blue")
+        axs[0, 3].set(xlabel='t(min)', ylabel=r'$S_4(mM)$')
 
-        axs[2, 0].plot(t, y[:,4], label="Exact", color="blue")
-        axs[2, 0].set(xlabel='t', ylabel=r'$S_5$')
+        axs[1, 0].plot(t, y[:,4], label="Exact", color="blue")
+        axs[1, 0].set(xlabel='t(min)', ylabel=r'$S_5(mM)$')
 
-        axs[2, 1].plot(t, y[:,5], label="Exact", color="blue")
-        axs[2, 1].set(xlabel='t', ylabel=r'$S_6$')
+        axs[1, 1].plot(t, y[:,5], label="Exact", color="blue")
+        axs[1, 1].set(xlabel='t(min)', ylabel=r'$S_6(mM)$')
 
-        axs[3, 0].plot(t, y[:,6], label="Exact", color="blue")
-        axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
+        axs[1, 2].plot(t, y[:,6], label="Exact", color="blue")
+        axs[1, 2].set(xlabel='t(min)', ylabel=r'$S_7(mM)$')
 
         plt.legend(prop={'size': 10})
-        plt.savefig("RawData")
+        plt.savefig("Stochastic-Data")
         plt.close()
 
-
-        fig, axs = plt.subplots(4, 2,figsize=(12,17))
+        fig, axs = plt.subplots(2, 4,figsize=(25,12))
 
         axs[0, 0].scatter(t, y[:,0], label="Exact", color="blue")
-        axs[0, 0].set(xlabel='t', ylabel=r'$S_1$')
+        axs[0, 0].set(xlabel='t(min)', ylabel=r'$S_1(mM)$')
 
         axs[0, 1].scatter(t, y[:,1], label="Exact", color="blue")
-        axs[0, 1].set(xlabel='t', ylabel=r'$S_2$')
+        axs[0, 1].set(xlabel='t(min)', ylabel=r'$S_2(mM)$')
         
-        axs[1, 0].scatter(t, y[:,2], label="Exact", color="blue")
-        axs[1, 0].set(xlabel='t', ylabel=r'$S_3$')
+        axs[0, 2].scatter(t, y[:,2], label="Exact", color="blue")
+        axs[0, 2].set(xlabel='t(min)', ylabel=r'$S_3(mM)$')
 
-        axs[1, 1].scatter(t, y[:,3], label="Exact", color="blue")
-        axs[1, 1].set(xlabel='t', ylabel=r'$S_4$')
+        axs[0, 3].scatter(t, y[:,3], label="Exact", color="blue")
+        axs[0, 3].set(xlabel='t(min)', ylabel=r'$S_4(mM)$')
 
-        axs[2, 0].scatter(t, y[:,4], label="Exact", color="blue")
-        axs[2, 0].set(xlabel='t', ylabel=r'$S_5$')
+        axs[1, 0].scatter(t, y[:,4], label="Exact", color="blue")
+        axs[1, 0].set(xlabel='t(min)', ylabel=r'$S_5(mM)$')
 
-        axs[2, 1].scatter(t, y[:,5], label="Exact", color="blue")
-        axs[2, 1].set(xlabel='t', ylabel=r'$S_6$')
+        axs[1, 1].scatter(t, y[:,5], label="Exact", color="blue")
+        axs[1, 1].set(xlabel='t(min)', ylabel=r'$S_6(mM)$')
 
-        axs[3, 0].scatter(t, y[:,6], label="Exact", color="blue")
-        axs[3, 0].set(xlabel='t', ylabel=r'$S_7$')
+        axs[1, 2].scatter(t, y[:,6], label="Exact", color="blue")
+        axs[1, 2].set(xlabel='t(min)', ylabel=r'$S_7(mM)$')
 
         plt.legend(prop={'size': 10})
-        plt.savefig("MeasurementData")
+        plt.savefig("Measurement-Data")
         plt.close()
+
+        # should be removed
+        std = noise * y_p.std(0)
+        y_p[1:-1, :] += np.random.normal(0, std, (y_p.shape[0] - 2, y_p.shape[1]))
+        np.savetxt("validation-data.dat", np.hstack((t, y)))
+
+        fig, axs = plt.subplots(2, 4,figsize=(25,12))
+
+        axs[0, 0].scatter(t, y[:,0], label="Exact", color="blue")
+        axs[0, 0].plot(t, y_p[:,0],"r--",linewidth=1, label="Exact")
+        axs[0, 0].set(xlabel='t(min)', ylabel=r'$S_1(mM)$')
+
+        axs[0, 1].scatter(t, y[:,1], label="Exact", color="blue")
+        axs[0, 1].plot(t, y_p[:,1],"r--",linewidth=1, label="Exact")
+        axs[0, 1].set(xlabel='t(min)', ylabel=r'$S_2(mM)$')
+        
+        axs[0, 2].scatter(t, y[:,2], label="Exact", color="blue")
+        axs[0, 2].plot(t, y_p[:,2],"r--",linewidth=1, label="Exact")
+        axs[0, 2].set(xlabel='t(min)', ylabel=r'$S_3(mM)$')
+
+        axs[0, 3].scatter(t, y[:,3], label="Exact", color="blue")
+        axs[0, 3].plot(t, y_p[:,3],"r--",linewidth=1, label="Exact")
+        axs[0, 3].set(xlabel='t(min)', ylabel=r'$S_4(mM)$')
+
+        axs[1, 0].scatter(t, y[:,4], label="Exact", color="blue")
+        axs[1, 0].plot(t, y_p[:,4],"r--",linewidth=1, label="Exact")
+        axs[1, 0].set(xlabel='t(min)', ylabel=r'$S_5(mM)$')
+
+        axs[1, 1].scatter(t, y[:,5], label="Exact", color="blue")
+        axs[1, 1].plot(t, y_p[:,5],"r--",linewidth=1, label="Exact")
+        axs[1, 1].set(xlabel='t(min)', ylabel=r'$S_6(mM)$')
+
+        axs[1, 2].scatter(t, y[:,6], label="Exact", color="blue")
+        axs[1, 2].plot(t, y_p[:,6],"r--",linewidth=1, label="Exact")
+        axs[1, 2].set(xlabel='t(min)', ylabel=r'$S_7(mM)$')
+
+        plt.legend(prop={'size': 10})
+        plt.savefig("validation")
+        plt.close()
+        #
 
     # Train
     var_list = pinn(t, y, noise, dt, Eps)

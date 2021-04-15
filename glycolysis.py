@@ -1,5 +1,9 @@
 import numpy as np
 from scipy.integrate import odeint
+from scipy.integrate import ode
+from scipy.integrate import solve_ivp
+
+
 
 import deepxde as dde
 from deepxde.backend import tf
